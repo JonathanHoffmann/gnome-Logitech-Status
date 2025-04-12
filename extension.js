@@ -6,6 +6,7 @@ const { GObject, St, GLib, Gio, Clutter } = imports.gi;
 const Main = imports.ui.main;
 const PanelMenu = imports.ui.panelMenu;
 const ByteArray = imports.byteArray;
+const Util = imports.misc.util;
 
 let indicator;
 
@@ -20,6 +21,7 @@ class BatteryIndicator extends PanelMenu.Button {
         });
 
         this.add_child(this._label);
+
         this._update();
         this._timeout = GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, 600, () => {
             this._update();
@@ -70,6 +72,7 @@ function init() {}
 function enable() {
     indicator = new BatteryIndicator();
     Main.panel.addToStatusArea('logitech-battery', indicator);
+    indicator.connect('button-press-event', clickFunction);
 }
 
 function disable() {
@@ -77,4 +80,9 @@ function disable() {
         indicator.destroy();
         indicator = null;
     }
+}
+
+// Method to handle click events
+function clickFunction() {
+    Util.spawn(['/usr/bin/solaar'])
 }

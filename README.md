@@ -1,21 +1,16 @@
-# Airpods Battery Status
+# Logitech Battery Status
 
-A Gnome Shell Extension to display the battery levels of your Airpods (and case) in the top bar.
+A Gnome Shell Extension to display the battery levels of your Logitech mouse in the top bar.
 
-![Airpods Battery Status](https://github.com/delphiki/gnome-airpods-battery-status/raw/main/screenshot.png)
+![Logitech Battery Status](https://github.com/JonathanHoffmann/gnome-Logitech-Status/raw/main/screenshot.png)
 
 ## Requirements
 
-Install [AirStatus](https://github.com/delphiki/AirStatus) as a service, using `/tmp/airstatus.out` as output file.
+Install [Solaar](https://github.com/pwr-Solaar/Solaar)
 
 ## Installation
-
-Search for "Airpods battery status" on https://extensions.gnome.org/
-
-OR 
-
 ```shell
-$ mkdir -p ~/.local/share/gnome-shell/extensions/airpods-battery-status@ju.wtf
-$ cd ~/.local/share/gnome-shell/extensions/airpods-battery-status@ju.wtf
-$ git clone https://github.com/delphiki/gnome-airpods-battery-status .
+$ mkdir -p ~/.local/share/gnome-shell/extensions/gnome-logitech-status@ju.wtf
+$ cd ~/.local/share/gnome-shell/extensions/gnome-logitech-status@ju.wtf
+$ git clone https://github.com/JonathanHoffmann/gnome-Logitech-Status .
 ```

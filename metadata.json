@@ -1,11 +1,11 @@
 {
-    "name": "Airpods Battery status",
-    "description": "Show Airpods battery level in top bar\n\n/!\\ Needs AirStatus to work: https://github.com/delphiki/AirStatus",
+    "name": "Logitech Battery status",
+    "description": "Show Logitech battery level in top bar\n\n/!\\ Needs Solaar to work: https://github.com/pwr-Solaar/Solaar",
     "shell-version": [
         "43",
         "44"
     ],
-    "uuid": "airpods-battery-status@ju.wtf",
+    "uuid": "gnome-logitech-status@ju.wtf",
     "version": "8",
-    "url": "https://github.com/delphiki/gnome-airpods-battery-status"
+    "url": "https://github.com/JonathanHoffmann/gnome-Logitech-Status"
 }

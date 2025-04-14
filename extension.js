@@ -7,6 +7,7 @@ const Main = imports.ui.main;
 const PanelMenu = imports.ui.panelMenu;
 const ByteArray = imports.byteArray;
 const Util = imports.misc.util;
+const Me = imports.misc.extensionUtils.getCurrentExtension();
 
 let indicator;
 
@@ -15,12 +16,24 @@ class BatteryIndicator extends PanelMenu.Button {
     _init() {
         super._init(0.0, 'Logitech Battery Indicator');
 
+        // Load your SVG icon
+        this._icon = new St.Icon({
+            gicon: Gio.icon_new_for_string(Me.path + '/logi.png'),
+            style_class: 'system-status-icon',
+            icon_size: 16
+        });
+
         this._label = new St.Label({
-            text: 'Mouse: ?%',
+            text: '?%',
             y_align: Clutter.ActorAlign.CENTER
         });
 
-        this.add_child(this._label);
+        // Horizontal box to hold icon and label
+        this._box = new St.BoxLayout({ style_class: 'panel-status-menu-box' });
+        this._box.add_child(this._icon);
+        this._box.add_child(this._label);
+
+        this.add_child(this._box); // Only add _box once
 
         this._update();
         this._timeout = GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, 600, () => {
@@ -31,30 +44,29 @@ class BatteryIndicator extends PanelMenu.Button {
 
     _update() {
         try {
-            // Run solaar show command and capture its output
-            let [success, out, err, status] = GLib.spawn_command_line_sync('solaar show');
+            // Read the battery percentage from the file
+            let [success, content] = GLib.file_get_contents('/tmp/logitech_battery_percentage.txt');
             
             if (!success) {
-                this._label.set_text('Mouse: ??%');
+                this._label.set_text('??%');
                 return;
             }
-    
-            let output = ByteArray.toString(out);
+
+            let output = ByteArray.toString(content).trim(); // Ensure there's no trailing whitespace
             
             // Log the output for debugging
-            log(`Solaar output: ${output}`);
+            log(`Battery file content: ${output}`);
     
-            // Find the first line containing Battery information
-            let match = output.match(/Battery:\s+(\d+)%/);
-            
+            // If the content is a valid number, update the label
+            let match = output.match(/^(\d+)$/); // Match just the number
             if (match) {
-                this._label.set_text(`Mouse: ${match[1]}%`);
+                this._label.set_text(`${match[1]}%`); // Append '%' to the number
             } else {
-                this._label.set_text('Mouse: ??%');
+                this._label.set_text('??%');
             }
         } catch (e) {
-            log(`Battery command error: ${e}`);
-            this._label.set_text('Mouse: Err');
+            log(`Error reading battery file: ${e}`);
+            this._label.set_text('Err');
         }
     }
 
@@ -72,7 +84,7 @@ function init() {}
 function enable() {
     indicator = new BatteryIndicator();
     Main.panel.addToStatusArea('logitech-battery', indicator);
-    indicator.connect('button-press-event', clickFunction);
+    indicator.connect('button-press-event', clickFunction);  // Connect click event here
 }
 
 function disable() {
@@ -85,4 +97,7 @@ function disable() {
 // Method to handle click events
 function clickFunction() {
     Util.spawn(['/usr/bin/solaar'])
+    if (indicator) {
+        indicator._update();
+    }
 }
